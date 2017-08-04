@@ -267,29 +267,22 @@ ifeq (KSLIB, $(MODULE_TYPE))
 	          -include $(SYS_PATH)/include/linux/kconfig.h
             else
             MODULE_INC += -I$(SYS_PATH) \
-	      -I$(TOOL_PATH)/../lib/gcc/mips-openwrt-linux-$(TARGET_SUFFIX)/$(GCC_VERSION)/include/ \
+	      -I$(TOOL_PATH)/../lib/gcc/apm821xx-openwrt-linux-$(TARGET_SUFFIX)/$(GCC_VERSION)/include/ \
               -I$(SYS_PATH)/include \
 	      -I$(SYS_PATH)/source/include \
-              -I$(SYS_PATH)/source/arch/mips/mach-msm/include \
-	      -I$(SYS_PATH)/arch/mips/mach-msm/include \
-	      -I$(SYS_PATH)/source/arch/mips/include \
-              -I$(SYS_PATH)/arch/mips/include \
-	      -I$(SYS_PATH)/source/arch/mips/include/asm \
-	      -I$(SYS_PATH)/arch/mips/include/generated \
+	      -I$(SYS_PATH)/source/arch/powerpc/include \
+              -I$(SYS_PATH)/arch/powerpc/include \
+	      -I$(SYS_PATH)/source/arch/powerpc/include/asm \
+	      -I$(SYS_PATH)/arch/powerpc/include/generated \
               -I$(SYS_PATH)/include/generated/uapi \
 	      -I$(SYS_PATH)/include/uapi \
-	      -I$(SYS_PATH)/arch/mips/include/uapi \
-	      -I$(SYS_PATH)/source/arch/mips/include/asm/mach \
 	      -include $(SYS_PATH)/include/linux/kconfig.h \
-              -I$(SYS_PATH)/arch/mips/include/asm/mach-ar7240 \
-              -I$(SYS_PATH)/arch/mips/include/asm/mach-generic \
-              -I$(SYS_PATH)/arch/mips/include/asm/mach-ar7 \
               -I$(SYS_PATH)/usr/include
 
 	    #CPU_CFLAG    = -G 0 -mno-abicalls -fno-pic -pipe -mabi=32 -march=mips32r2
             ifndef CPU_CFLAG
-            CPU_CFLAG    = -Wstrict-prototypes -fomit-frame-pointer -G 0 -mno-abicalls -fno-strict-aliasing \
-			-O2 -fno-pic -pipe -mabi=32 -march=mips32r2 -DMODULE -mlong-calls -DEXPORT_SYMTAB
+            CPU_CFLAG    = -Wstrict-prototypes -fomit-frame-pointer -G 0 -fno-strict-aliasing -fno-common \
+			-O2 -fno-pic -pipe -mcpu=464fp -DMODULE -mlongcall -DEXPORT_SYMTAB
             endif
             endif
 

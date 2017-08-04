@@ -76,7 +76,7 @@ QCASSDK_CONFIG_OPTS+= TOOL_PATH=$(TOOLCHAIN_BIN_PATH) \
 
 ifeq ($(LOCAL_VARIANT),hnat)
     QCASSDK_CONFIG_OPTS+= HNAT_FEATURE=enable
-ifeq ($(CONFIG_TARGET_ar71xx),)
+ifeq ($(CONFIG_TARGET_apm821xx_nand),)
     QCASSDK_CONFIG_OPTS+= RFS_FEATURE=enable
 endif
 endif

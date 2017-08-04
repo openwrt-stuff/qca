@@ -11,7 +11,7 @@ endif
 
 #define cpu type such as PPC MIPS ARM X86
 ifndef CPU
-  CPU=mips
+  CPU=ppc
 endif
 
 #define os type such as linux netbsd vxworks
@@ -59,7 +59,7 @@ else
      ifneq (TRUE, $(FAL))
          $(error FAL must be TRUE when CHIP_TYPE is defined as ALL_CHIP!)
      endif
-     SUPPORT_CHIP = ISIS ISISC SHIVA DESS
+     SUPPORT_CHIP = ISIS ISISC SHIVA
   endif
 
   ifndef SUPPORT_CHIP

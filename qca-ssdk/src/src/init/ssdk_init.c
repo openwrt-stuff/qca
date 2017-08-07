@@ -1081,10 +1081,10 @@ const struct switch_dev_ops qca_ar8327_sw_ops = {
 	.apply_config = qca_ar8327_sw_hw_apply,
 	.reset_switch = qca_ar8327_sw_reset_switch,
 	.get_port_link = qca_ar8327_sw_get_port_link,
-#ifndef BOARD_AR71XX
+/*#ifndef BOARD_AR71XX
 	.get_reg_val = qca_ar8327_sw_get_reg_val,
 	.set_reg_val = qca_ar8327_sw_set_reg_val,
-#endif
+#endif*/
 };
 
 #define SSDK_MIB_CHANGE_WQ
@@ -2512,7 +2512,7 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 	}
 	printk("ess-switch DT exist!\n");
 
-	reg_cfg = of_get_property(switch_node, "reg", &len);
+	reg_cfg = of_get_property(switch_node, "reg", (int *)&len);
 	if(!reg_cfg) {
 		printk("%s: error reading device node properties for reg\n", switch_node->name);
 		return SW_BAD_PARAM;
@@ -2533,9 +2533,9 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 	printk("switchreg_base_addr: 0x%x\n", ssdk_dt_global.switchreg_base_addr);
 	printk("switchreg_size: 0x%x\n", ssdk_dt_global.switchreg_size);
 	printk("switch_access_mode: %s\n", ssdk_dt_global.reg_access_mode);
-	if(!strcmp(ssdk_dt_global.reg_access_mode, "local bus"))
+	if(!strcmp((const char *)ssdk_dt_global.reg_access_mode, "local bus"))
 		ssdk_dt_global.switch_reg_access_mode = HSL_REG_LOCAL_BUS;
-	else if(!strcmp(ssdk_dt_global.reg_access_mode, "mdio"))
+	else if(!strcmp((const char *)ssdk_dt_global.reg_access_mode, "mdio"))
 		ssdk_dt_global.switch_reg_access_mode = HSL_REG_MDIO;
 	else
 		ssdk_dt_global.switch_reg_access_mode = HSL_REG_MDIO;
@@ -2553,7 +2553,7 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 		return SW_BAD_PARAM;
 	}
 	printk("ess-psgmii DT exist!\n");
-	reg_cfg = of_get_property(psgmii_node, "reg", &len);
+	reg_cfg = of_get_property(psgmii_node, "reg", (int *)&len);
 	if(!reg_cfg) {
 		printk("%s: error reading device node properties for reg\n", psgmii_node->name);
 		return SW_BAD_PARAM;
@@ -2565,10 +2565,10 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 		printk("%s: error reading device node properties for psmgii_access_mode\n", psgmii_node->name);
 		return SW_BAD_PARAM;
 	}
-	if(!strcmp(ssdk_dt_global.psgmii_reg_access_str, "local bus"))
+	if(!strcmp((const char *)ssdk_dt_global.psgmii_reg_access_str, "local bus"))
 		ssdk_dt_global.psgmii_reg_access_mode = HSL_REG_LOCAL_BUS;
 
-	mac_mode = of_get_property(switch_node, "switch_mac_mode", &len);
+	mac_mode = of_get_property(switch_node, "switch_mac_mode", (int *)&len);
 	if(!mac_mode) {
 		printk("%s: error reading device node properties for mac mode\n", switch_node->name);
 		return SW_BAD_PARAM;
@@ -2579,40 +2579,40 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 	printk("current mac mode = %d\n", ssdk_dt_global.mac_mode);
 	for_each_available_child_of_node(switch_node, child) {
 
-		led_source = of_get_property(child, "source", &len);
+		led_source = of_get_property(child, "source", (int *)&len);
 		if (led_source)
 			cfg->led_source_cfg[i].led_source_id = be32_to_cpup(led_source);
-		led_number = of_get_property(child, "led", &len);
+		led_number = of_get_property(child, "led", (int *)&len);
 		if (led_number)
 			cfg->led_source_cfg[i].led_num = be32_to_cpup(led_number);
 		if (!of_property_read_string(child, "mode", (const char **)&led_str)) {
-			if (!strcmp(led_str, "normal"))
+			if (!strcmp((const char *)led_str, "normal"))
 			cfg->led_source_cfg[i].led_pattern.mode = LED_PATTERN_MAP_EN;
-			if (!strcmp(led_str, "on"))
+			if (!strcmp((const char *)led_str, "on"))
 			cfg->led_source_cfg[i].led_pattern.mode = LED_ALWAYS_ON;
-			if (!strcmp(led_str, "blink"))
+			if (!strcmp((const char *)led_str, "blink"))
 			cfg->led_source_cfg[i].led_pattern.mode = LED_ALWAYS_BLINK;
-			if (!strcmp(led_str, "off"))
+			if (!strcmp((const char *)led_str, "off"))
 			cfg->led_source_cfg[i].led_pattern.mode = LED_ALWAYS_OFF;
 		}
 		if (!of_property_read_string(child, "speed", (const char **)&led_str)) {
-			if (!strcmp(led_str, "10M"))
+			if (!strcmp((const char *)led_str, "10M"))
 			cfg->led_source_cfg[i].led_pattern.map = LED_MAP_10M_SPEED;
-			if (!strcmp(led_str, "100M"))
+			if (!strcmp((const char *)led_str, "100M"))
 			cfg->led_source_cfg[i].led_pattern.map = LED_MAP_100M_SPEED;
-			if (!strcmp(led_str, "100M"))
+			if (!strcmp((const char *)led_str, "100M"))
 			cfg->led_source_cfg[i].led_pattern.map = LED_MAP_1000M_SPEED;
-			if (!strcmp(led_str, "all"))
+			if (!strcmp((const char *)led_str, "all"))
 			cfg->led_source_cfg[i].led_pattern.map = LED_MAP_ALL_SPEED;
 		}
 		if (!of_property_read_string(child, "freq", (const char **)&led_str)) {
-			if (!strcmp(led_str, "2Hz"))
+			if (!strcmp((const char *)led_str, "2Hz"))
 			cfg->led_source_cfg[i].led_pattern.freq = LED_BLINK_2HZ;
-			if (!strcmp(led_str, "4Hz"))
+			if (!strcmp((const char *)led_str, "4Hz"))
 			cfg->led_source_cfg[i].led_pattern.freq = LED_BLINK_4HZ;
-			if (!strcmp(led_str, "8Hz"))
+			if (!strcmp((const char *)led_str, "8Hz"))
 			cfg->led_source_cfg[i].led_pattern.freq = LED_BLINK_8HZ;
-			if (!strcmp(led_str, "auto"))
+			if (!strcmp((const char *)led_str, "auto"))
 			cfg->led_source_cfg[i].led_pattern.freq = LED_BLINK_TXRX;
 		}
 		i++;
@@ -2629,7 +2629,7 @@ static int ssdk_dt_parse(ssdk_init_cfg *cfg)
 
 	for_each_available_child_of_node(mdio_node, child) {
 
-		phy_addr = of_get_property(child, "reg", &len);
+		phy_addr = of_get_property(child, "reg", (int *)&len);
 		if (phy_addr)
 			phy_address[j] = be32_to_cpup(phy_addr);
 		j++;
